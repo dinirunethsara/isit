@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hacker Animation with Facebook Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            color: #00FF00;
+            overflow: hidden;
+        }
+
+        .hacker-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1;
+        }
+
+        .code {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-container input {
+            background: black;
+            border: 2px solid #00FF00;
+            color: #00FF00;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+            width: 300px;
+            text-align: center;
+        }
+
+        .input-container button {
+            background: black;
+            border: 2px solid #00FF00;
+            color: #00FF00;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #00FF00;
+            color: black;
+        }
+
+        @keyframes matrix {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        .matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: hidden;
+        }
+
+        .matrix div {
+            position: absolute;
+            top: 0;
+            width: 1em;
+            height: 100%;
+            color: #00FF00;
+            font-family: monospace;
+            font-size: 20px;
+            line-height: 1.5;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: matrix 5s linear infinite;
+            animation-delay: calc(-5s * var(--i));
+        }
+
+        .matrix div:nth-child(even) {
+            animation-duration: 4.5s;
+        }
+
+        .author {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #00FF00;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix">
+        <div style="--i:1;">10101011010101110101</div>
+        <div style="--i:2;">01011100111010101001</div>
+        <div style="--i:3;">01100101110101011101</div>
+        <div style="--i:4;">00101110100101101011</div>
+        <div style="--i:5;">10101110110100101110</div>
+        <div style="--i:6;">01011100101101010111</div>
+        <div style="--i:7;">10101011010110111010</div>
+        <div style="--i:8;">01011100101011010101</div>
+        <div style="--i:9;">11010110101101001011</div>
+        <div style="--i:10;">10101001101011100101</div>
+        <div style="--i:11;">01011100111010101010</div>
+    </div>
+
+    <div class="hacker-animation">
+        <div class="code">Enter Your Details</div>
+
+        <div class="input-container">
+            <input type="text" id="name" placeholder="Enter Your Name" />
+            <input type="text" id="nic" placeholder="Enter Your NIC" />
+            <button onclick="displayInfo()">Submit</button>
+            <button onclick="findFacebook()">Find Facebook</button>
+        </div>
+
+        <div id="output" class="code"></div>
+    </div>
+
+    <div class="author">
+        Developed by: Diniru Nethsara
+    </div>
+
+    <script>
+        function displayInfo() {
+            const name = document.getElementById("name").value;
+            const nic = document.getElementById("nic").value;
+            const output = document.getElementById("output");
+
+            if (!name || !nic) {
+                output.innerHTML = "Please enter both your name and NIC.";
+                return;
+            }
+
+            let year, month, gender;
+            if (nic.length === 10) {
+                year = "19" + nic.substr(0, 2);
+                let dayCode = parseInt(nic.substr(2, 3));
+                if (dayCode > 500) {
+                    gender = "Female";
+                    dayCode -= 500;
+                } else {
+                    gender = "Male";
+                }
+                month = getMonthFromDayCode(dayCode);
+            } else if (nic.length === 12) {
+                year = nic.substr(0, 4);
+                let dayCode = parseInt(nic.substr(4, 3));
+                if (dayCode > 500) {
+                    gender = "Female";
+                    dayCode -= 500;
+                } else {
+                    gender = "Male";
+                }
+                month = getMonthFromDayCode(dayCode);
+            } else {
+                output.innerHTML = "Invalid NIC format.";
+                return;
+            }
+
+            output.innerHTML = `Name: ${name}<br>Birth Year: ${year}<br>Birth Month: ${month}<br>Gender: ${gender}`;
+        }
+
+        function findFacebook() {
+            const name = document.getElementById("name").value;
+            if (!name) {
+                alert("Please enter a name to search.");
+                return;
+            }
+            const fbSearchURL = `https://www.facebook.com/search/top?q=${encodeURIComponent(name)}`;
+            window.open(fbSearchURL, '_blank');
+        }
+
+        function getMonthFromDayCode(dayCode) {
+            const months = [
+                { month: "January", days: 31 },
+                { month: "February", days: 29 },
+                { month: "March", days: 31 },
+                { month: "April", days: 30 },
+                { month: "May", days: 31 },
+                { month: "June", days: 30 },
+                { month: "July", days: 31 },
+                { month: "August", days: 31 },
+                { month: "September", days: 30 },
+                { month: "October", days: 31 },
+                { month: "November", days: 30 },
+                { month: "December", days: 31 }
+            ];
+
+            let cumulativeDays = 0;
+            for (const m of months) {
+                if (dayCode <= cumulativeDays + m.days) {
+                    return m.month;
+                }
+                cumulativeDays += m.days;
+            }
+
+            return "Unknown";
+        }
+    </script>
+</body>
+</html>
